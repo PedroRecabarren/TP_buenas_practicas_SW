@@ -2,17 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-const int MAX_TEXTO = 50;
-const int MAX_LECTURA_CADENA = 49;
-const int NIVEL_MINIMO = 1;
-const int NIVEL_MAXIMO = 100;
-
-typedef struct {
-    int nivel;
-    char sector[MAX_TEXTO];
-    char nombreTanque[MAX_TEXTO];
-} tanque;
+#include "tanques.h"
 
 /*
  * Limpia el bufer de entrada hasta encontrar un salto de linea o EOF.

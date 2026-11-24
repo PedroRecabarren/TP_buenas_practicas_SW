@@ -157,6 +157,71 @@ void MostrarTodos(tanque *p_tanques, int c_tanques) {
     }
 }
 
+void BuscarEnCadenas(tanque *p_tanques, int c_tanques) {
+    int tipo_busqueda = 0;
+    int campo = 0;
+    int coincidencias = 0;
+    char caracter_buscado = '\0';
+    char texto_buscado[50];
+
+    if (c_tanques <= 0) {
+        printf("No hay tanques cargados para buscar.\n");
+        return;
+    }
+
+    printf("¿Que desea buscar?\n1 - Un caracter (strchr)\n2 - Una silaba o subcadena (strstr)\n");
+    scanf("%d", &tipo_busqueda);
+    while (getchar() != '\n');
+
+    printf("¿En que campo desea buscar?\n1 - Nombre del tanque\n2 - Sector\n3 - Ambos\n");
+    scanf("%d", &campo);
+    while (getchar() != '\n');
+
+    if (tipo_busqueda == 1) {
+        printf("Ingrese el caracter a buscar:\n");
+        scanf(" %c", &caracter_buscado);
+        while (getchar() != '\n');
+    } else if (tipo_busqueda == 2) {
+        printf("Ingrese la silaba o texto a buscar:\n");
+        scanf("%49s", texto_buscado);
+        while (getchar() != '\n');
+    } else {
+        printf("Tipo de busqueda invalido.\n");
+        return;
+    }
+
+    for (int i = 0; i < c_tanques; i++) {
+        int coincide_nombre = 0;
+        int coincide_sector = 0;
+
+        if (tipo_busqueda == 1) {
+            if ((campo == 1 || campo == 3) && strchr(p_tanques[i].nombreTanque, caracter_buscado) != NULL) {
+                coincide_nombre = 1;
+            }
+            if ((campo == 2 || campo == 3) && strchr(p_tanques[i].sector, caracter_buscado) != NULL) {
+                coincide_sector = 1;
+            }
+        } else {
+            if ((campo == 1 || campo == 3) && strstr(p_tanques[i].nombreTanque, texto_buscado) != NULL) {
+                coincide_nombre = 1;
+            }
+            if ((campo == 2 || campo == 3) && strstr(p_tanques[i].sector, texto_buscado) != NULL) {
+                coincide_sector = 1;
+            }
+        }
+
+        if (coincide_nombre || coincide_sector) {
+            printf("Coincidencia -> Tanque %d | Sector: %s | Nombre: %s | Nivel: %d%%\n",
+                   i + 1, p_tanques[i].sector, p_tanques[i].nombreTanque, p_tanques[i].nivel);
+            coincidencias++;
+        }
+    }
+
+    if (coincidencias == 0) {
+        printf("No se encontraron coincidencias.\n");
+    }
+}
+
 int main() {
     int c_tanques = 0;
     int opcion = 0;
@@ -185,6 +250,7 @@ int main() {
         printf("2 - Ver los dos tanques con menor nivel de agua\n");
         printf("3 - Ver todos los tanques\n");
         printf("4 - Agregar nuevos tanques\n");
+        printf("5 - Buscar caracter o silaba en nombre o sector\n");
         printf("0 - Salir\n");
         scanf("%d", &opcion);
         while (getchar() != '\n');
@@ -201,6 +267,9 @@ int main() {
                 break;
             case 4:
                 AgregarTanques(&p_tanques, &c_tanques);
+                break;
+            case 5:
+                BuscarEnCadenas(p_tanques, c_tanques);
                 break;
             case 0:
                 printf("Saliendo del programa...\n");
